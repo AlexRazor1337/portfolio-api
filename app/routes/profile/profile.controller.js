@@ -7,6 +7,8 @@ const getProfile = ({ id }) => {
             id,
         },
     }).then((result) => {
+        if (!result) throw new Error('User not found');
+
         delete result.dataValues.password;
         return result;
     })
@@ -24,6 +26,7 @@ const deleteProfile = ({ id, token }) => {
         }),
     ]).then((result) => {
         if (result[0] === 1) return { message: 'Profile deleted' };
+        else throw new Error('User not found');
     });
 }
 
