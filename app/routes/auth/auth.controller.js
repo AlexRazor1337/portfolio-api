@@ -33,11 +33,11 @@ const login = async ({ email, password }) => {
         raw: true,
     });
 
-    if (!user) return new Error('Invalid credentials');
+    if (!user) throw new Error('Invalid credentials');
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) return new Error('Invalid credentials');
+    if (!isPasswordValid) throw new Error('Invalid credentials');
 
     delete user.password;
     const token = jwt.sign(user, process.env.JWT_SECRET);
@@ -51,7 +51,7 @@ const login = async ({ email, password }) => {
 const logout = (token) => {
     return InvalidatedToken.create({
         token,
-    });
+    }).then(() => { return { message: 'Logged out' } });
 };
 
 
