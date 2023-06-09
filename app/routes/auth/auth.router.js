@@ -15,4 +15,11 @@ authRouter.post('/signup', validator(validation.signup), (req, res, next) =>
         .catch(next)
 );
 
+authRouter.post('/login', validator(validation.login), (req, res, next) =>
+    authController
+        .login(req.body)
+        .then((result) => res.status(StatusCodes.OK).send(result))
+        .catch(next)
+);
+
 module.exports = authRouter;
