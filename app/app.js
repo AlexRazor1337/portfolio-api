@@ -8,5 +8,6 @@ app.use(express.json());
 
 app.use(routes);
 app.use(errorHandler);
+app.use('/images', express.static('images'))
 
 module.exports = app;
