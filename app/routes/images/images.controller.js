@@ -40,7 +40,7 @@ const getImage = async ({ id: userId, imageId }) => {
 
     if (!image || image.Portfolio.userId !== userId) throw new Error('Image not found!');
 
-    return image;
+    return { ...image.get(), url: `/images/${image.filename}`};
 };
 
 const deleteImage = async ({ id: userId, imageId }) => {

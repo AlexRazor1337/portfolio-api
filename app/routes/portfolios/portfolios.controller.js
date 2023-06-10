@@ -6,7 +6,6 @@ const getPortfolios = ({ id: userId }) => {
         where: {
             userId,
         },
-        include: Image,
     });
 };
 
@@ -27,8 +26,6 @@ const deletePortfolio = async ({ id: userId, portfolioId }) => {
         individualHooks: true,
     });
 
-    console.log(isDeleted);
-
     if (!isDeleted) throw new Error('Portfolio not found');
     return { message: 'Portfolio deleted' };
 };
@@ -39,10 +36,21 @@ const getPortfolio = async ({ id: userId, portfolioId }) => {
             id: portfolioId,
             userId,
         },
-        include: Image,
-    });
+        include: {
+            model: Image,
+            attributes: {
+                exclude: ['portfolioId'],
+            },
+        },
+    }).then(portfolio => portfolio.get());
 
     if (!portfolio) throw new Error('Portfolio not found');
+
+    portfolio.Images = portfolio.Images.map(image => ({
+        ...image.get(),
+        url: `/images/${image.filename}`,
+    }));
+
     return portfolio;
 };
 

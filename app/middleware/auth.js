@@ -17,13 +17,14 @@ const auth = (req, res, next) => {
             },
         }).then((result) => {
             if (result) {
-                res.status(StatusCodes.UNAUTHORIZED).json({
+                return res.status(StatusCodes.UNAUTHORIZED).json({
                     error: 'Invalid token',
                 });
             }
 
             req.user = decoded;
             req.token = token;
+            next();
         });
     } catch (err) {
         res.status(StatusCodes.UNAUTHORIZED).json({
