@@ -24,7 +24,6 @@ const auth = (req, res, next) => {
 
             req.user = decoded;
             req.token = token;
-            next();
         });
     } catch (err) {
         res.status(StatusCodes.UNAUTHORIZED).json({
