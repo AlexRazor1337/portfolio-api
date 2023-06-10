@@ -22,7 +22,7 @@ authRouter.post('/login', validator(validation.login), (req, res, next) =>
         .catch(next)
 );
 
-authRouter.get('/logout', auth, (req, res, next) =>
+authRouter.post('/logout', auth, (req, res, next) =>
     authController
         .logout(req.token)
         .then((result) => res.status(StatusCodes.OK).send(result))
