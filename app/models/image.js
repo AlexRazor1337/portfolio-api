@@ -1,7 +1,8 @@
+const fs = require('fs');
+const path = require('path');
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('../db');
 
-const Portfolio = require('./portfolio');
+const sequelize = require('../db');
 
 class Image extends Model {}
 
@@ -13,7 +14,14 @@ Image.init({
     sequelize,
 });
 
-Image.belongsTo(Portfolio, { foreignKey: 'portfolioId' });
-Portfolio.hasMany(Image, { foreignKey: 'portfolioId' });
+Image.beforeDestroy(async (image, options) => { // Destroy images when Image instance is destroyed, called with portfolio delete
+    console.log(__dirname);
+    const filePath = path.join('images', image.filename);
+    try {
+        await fs.promises.unlink(filePath);
+    } catch (error) {
+        console.error(`Error deleting the file: ${image.filename}`, error);
+    }
+});
 
 module.exports = Image;

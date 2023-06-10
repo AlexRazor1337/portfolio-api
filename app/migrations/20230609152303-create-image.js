@@ -23,7 +23,6 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
       filename: {
         type: Sequelize.STRING
