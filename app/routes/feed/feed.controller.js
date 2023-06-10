@@ -1,7 +1,7 @@
-const Image = require('@/models/image');
-const Portfolio = require('@/models/portfolio');
-const Comment = require('@/models/comment');
 const User = require('@/models/user');
+const Image = require('@/models/image');
+const Comment = require('@/models/comment');
+const Portfolio = require('@/models/portfolio');
 
 const getFeed = async ({ offset = 0, limit = 10 }) => {
     return await Image.findAll({

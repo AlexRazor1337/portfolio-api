@@ -1,13 +1,12 @@
 const express = require('express');
 const { StatusCodes } = require('http-status-codes')
 
-const { auth, validator } = require('@/middleware');
+const { validator } = require('@/middleware');
 
 const feedController = require('./feed.controller');
 const validation = require('./feed.validation');
 
 const feedRouter = express.Router();
-feedRouter.use(auth);
 
 feedRouter.route('/')
     .get(validator(validation.getFeed), (req, res, next) =>

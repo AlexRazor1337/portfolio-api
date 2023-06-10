@@ -32,19 +32,18 @@ const uploadImage = async ({ id: userId, portfolioId, name, description, file })
     return image;
 };
 
-const getImage = async ({ id: userId, imageId }) => {
+const getImage = async ({ id }) => {
     const image = await Image.findOne({
         where: {
-            id: imageId,
-            '$Portfolio.userId$': userId,
+            id,
         },
         include: [{
             model: Portfolio,
-            attributes: ['userId'],
-        }
-            , {
+            attributes: ['id', 'name'],
+        },
+        {
             model: Comment,
-            attributes: { exclude: ['userId', 'imageId']},
+            attributes: { exclude: ['userId', 'imageId'] },
             include: {
                 model: User,
                 attributes: ['id', 'email'],
@@ -54,18 +53,19 @@ const getImage = async ({ id: userId, imageId }) => {
 
     if (!image) throw new Error('Image not found!');
 
-    return { ...image.get(), url: `/images/${image.filename}`};
+    return { ...image.get(), url: `/images/${image.filename}` };
 };
 
 const deleteImage = async ({ id: userId, imageId }) => {
     const image = await Image.findOne({
         where: {
             id: imageId,
+            '$Portfolio.userId$': userId,
         },
         include: Portfolio,
     });
 
-    if (!image || image.Portfolio.userId !== userId) throw new Error('Image not found!');
+    if (!image) throw new Error('Image not found!');
     await image.destroy();
 
     return { message: 'Image deleted!' };
