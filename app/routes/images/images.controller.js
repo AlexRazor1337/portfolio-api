@@ -1,9 +1,11 @@
-const Image = require('@/models/image');
-const Portfolio = require('@/models/portfolio');
-
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const mime = require('mime-types');
+
+const Image = require('@/models/image');
+const Portfolio = require('@/models/portfolio');
+const Comment = require('@/models/comment');
+const User = require('@/models/user');
 
 const uploadImage = async ({ id: userId, portfolioId, name, description, file }) => {
     const filename = `${crypto.randomUUID()}.${mime.extension(file.mimetype)}`;
@@ -34,11 +36,23 @@ const getImage = async ({ id: userId, imageId }) => {
     const image = await Image.findOne({
         where: {
             id: imageId,
+            '$Portfolio.userId$': userId,
         },
-        include: Portfolio,
+        include: [{
+            model: Portfolio,
+            attributes: ['userId'],
+        }
+            , {
+            model: Comment,
+            attributes: { exclude: ['userId', 'imageId']},
+            include: {
+                model: User,
+                attributes: ['id', 'email'],
+            },
+        }],
     });
 
-    if (!image || image.Portfolio.userId !== userId) throw new Error('Image not found!');
+    if (!image) throw new Error('Image not found!');
 
     return { ...image.get(), url: `/images/${image.filename}`};
 };
