@@ -8,7 +8,7 @@ class Image extends Model {}
 Image.init({
     name: DataTypes.STRING,
     description: DataTypes.STRING,
-    filehash: DataTypes.STRING,
+    filename: DataTypes.STRING,
 }, {
     sequelize,
 });

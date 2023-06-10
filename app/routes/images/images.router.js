@@ -11,7 +11,7 @@ const imagesRouter = express.Router();
 imagesRouter.use(auth);
 
 imagesRouter.route('/')
-    .post(validator(validation.uploadImage), multer().single('image'), (req, res, next) =>
+    .post(multer().single('image'), (req, res, next) =>
         imagesController
             .uploadImage({ ...req.user, ...req.body, file: req.file })
             .then((result) => res.status(StatusCodes.OK).send(result))

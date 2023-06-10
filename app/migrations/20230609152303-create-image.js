@@ -25,7 +25,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      filehash: {
+      filename: {
         type: Sequelize.STRING
       },
       createdAt: {

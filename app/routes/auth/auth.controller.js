@@ -4,7 +4,6 @@ const User = require('@/models/user')
 const InvalidatedToken = require('@/models/invalidated-token')
 
 const signup = async ({ email, password }) => {
-    console.log('signup', email, password)
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
