@@ -1,5 +1,6 @@
 const User = require('@/models/user');
 const InvalidatedToken = require('@/models/invalidated-token');
+const { NotFoundException } = require('@/exceptions');
 
 const getProfile = ({ id }) => {
     return User.findOne({
@@ -7,7 +8,7 @@ const getProfile = ({ id }) => {
             id,
         },
     }).then((result) => {
-        if (!result) throw new Error('User not found');
+        if (!result) throw new NotFoundException('User not found!');
 
         delete result.dataValues.password;
         return result;
@@ -26,7 +27,7 @@ const deleteProfile = ({ id, token }) => {
         }),
     ]).then((result) => {
         if (result[0] === 1) return { message: 'Profile deleted' };
-        else throw new Error('User not found');
+        else throw new NotFoundException('User not found!');
     });
 }
 

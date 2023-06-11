@@ -1,35 +1,29 @@
 const jwt = require('jsonwebtoken');
-const { StatusCodes } = require('http-status-codes');
 const InvalidatedToken = require('@/models/invalidated-token');
+const { ForbiddenException, UnauthorizedException } = require('@/exceptions');
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
-        throw new Error('Missing authorization token');
+        return next(new UnauthorizedException('Missing authorization token'));
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        InvalidatedToken.findOne({
+        const result = await InvalidatedToken.findOne({
             where: {
                 token,
             },
-        }).then((result) => {
-            if (result) {
-                return res.status(StatusCodes.UNAUTHORIZED).json({
-                    error: 'Invalid token',
-                });
-            }
+        })
 
-            req.user = decoded;
-            req.token = token;
-            next();
-        });
+        if (result) throw new ForbiddenException('Invalid token');
+
+        req.user = decoded;
+        req.token = token;
+        next();
     } catch (err) {
-        res.status(StatusCodes.UNAUTHORIZED).json({
-            error: 'Invalid token',
-        });
+        next(err);
     }
 }
 

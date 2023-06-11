@@ -1,3 +1,5 @@
+const { BadRequestException } = require('@/exceptions');
+
 const validator = (schema) => (req, res, next) => {
     const { body, params, query } = req;
     const request = { body, params, query };
@@ -5,7 +7,7 @@ const validator = (schema) => (req, res, next) => {
     Object.keys(request).forEach((key) => (Object.keys(request[key]).length === 0) && delete request[key]);
 
     const { error } = schema.validate(request);
-    if (error) throw new Error(error.details[0].message) // TODO: Create custom error
+    if (error) throw new BadRequestException(error.details[0].message);
 
     next();
 }

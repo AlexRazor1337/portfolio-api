@@ -24,7 +24,7 @@ imagesRouter.route('/:id')
             .then((result) => res.status(StatusCodes.OK).send(result))
             .catch(next)
     )
-    .delete(validator(auth, validation.deleteImage), (req, res, next) =>
+    .delete(auth, validator(validation.deleteImage), (req, res, next) =>
         imagesController
             .deleteImage({ ...req.user, imageId: req.params.id })
             .then((result) => res.status(StatusCodes.OK).send(result))

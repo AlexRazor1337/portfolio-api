@@ -1,4 +1,5 @@
 const Comment = require('@/models/comment');
+const { BadRequestException, NotFoundException } = require('@/exceptions');
 
 const createComment = ({ id: userId, imageId, text }) => {
     return Comment.create({
@@ -6,7 +7,7 @@ const createComment = ({ id: userId, imageId, text }) => {
         userId,
         text,
     }).catch(() => {
-        throw new Error('Error creating comment');
+        throw new BadRequestException('Error creating comment');
     });
 };
 
@@ -18,7 +19,7 @@ const deleteComment = async ({ id: userId, commentId }) => {
         },
     });
 
-    if (!isDeleted) throw new Error('Comment not found');
+    if (!isDeleted) throw new NotFoundException('Comment not found');
     return { message: 'Comment deleted' };
 };
 

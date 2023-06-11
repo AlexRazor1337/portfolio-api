@@ -6,6 +6,7 @@ const Image = require('@/models/image');
 const Portfolio = require('@/models/portfolio');
 const Comment = require('@/models/comment');
 const User = require('@/models/user');
+const { BadRequestException, NotFoundException, InternalServerErrorException } = require('@/exceptions');
 
 const uploadImage = async ({ id: userId, portfolioId, name, description, file }) => {
     const filename = `${crypto.randomUUID()}.${mime.extension(file.mimetype)}`;
@@ -18,7 +19,7 @@ const uploadImage = async ({ id: userId, portfolioId, name, description, file })
             filename,
         });
     } catch {
-        throw new Error('Error uploading image!');
+        throw new BadRequestException('Error uploading image!');
     }
 
     try {
@@ -26,7 +27,7 @@ const uploadImage = async ({ id: userId, portfolioId, name, description, file })
     } catch {
         await image.destroy();
 
-        throw new Error('Error uploading image!');
+        throw new InternalServerErrorException('Error uploading image!');
     }
 
     return image;
@@ -51,7 +52,7 @@ const getImage = async ({ id }) => {
         }],
     });
 
-    if (!image) throw new Error('Image not found!');
+    if (!image) throw new NotFoundException('Image not found!');
 
     return { ...image.get(), url: `/images/${image.filename}` };
 };
@@ -65,7 +66,7 @@ const deleteImage = async ({ id: userId, imageId }) => {
         include: Portfolio,
     });
 
-    if (!image) throw new Error('Image not found!');
+    if (!image) throw new NotFoundException('Image not found!');
     await image.destroy();
 
     return { message: 'Image deleted!' };

@@ -1,5 +1,6 @@
 const Portfolio = require('@/models/portfolio');
 const Image = require('@/models/image');
+const { NotFoundException } = require('@/exceptions');
 
 const getPortfolios = ({ id: userId }) => {
     return Portfolio.findAll({
@@ -26,7 +27,7 @@ const deletePortfolio = async ({ id: userId, portfolioId }) => {
         individualHooks: true,
     });
 
-    if (!isDeleted) throw new Error('Portfolio not found');
+    if (!isDeleted) throw new NotFoundException('Portfolio not found');
     return { message: 'Portfolio deleted' };
 };
 
@@ -44,7 +45,7 @@ const getPortfolio = async ({ id: userId, portfolioId }) => {
         },
     }).then(portfolio => portfolio.get());
 
-    if (!portfolio) throw new Error('Portfolio not found');
+    if (!portfolio) throw new NotFoundException('Portfolio not found');
 
     portfolio.Images = portfolio.Images.map(image => ({
         ...image.get(),
