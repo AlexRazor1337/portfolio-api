@@ -15,7 +15,6 @@ Image.init({
 });
 
 Image.beforeDestroy(async (image, options) => { // Destroy images when Image instance is destroyed, called with portfolio delete
-    console.log(__dirname);
     const filePath = path.join('images', image.filename);
     try {
         await fs.promises.unlink(filePath);

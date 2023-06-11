@@ -25,7 +25,7 @@ const getFeed = async ({ offset = 0, limit = 10 }) => {
         offset,
         limit,
         order: [['createdAt', 'DESC']],
-    });
+    }).then(images => images.map(image => { return { ...image.get(), url: `/images/${image.filename}` }}));
 }
 
 module.exports = {

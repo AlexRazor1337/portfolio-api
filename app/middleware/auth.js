@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const InvalidatedToken = require('@/models/invalidated-token');
 const { ForbiddenException, UnauthorizedException } = require('@/exceptions');
 

@@ -1,13 +1,13 @@
 const express = require('express');
 
-const API_PREFIX = '/api';
-
 const authRoutes = require('./auth/auth.router');
 const profileRouter = require('./profile/profile.router');
 const portfoliosRouter = require('./portfolios/portfolios.router');
 const imagesRouter = require('./images/images.router');
 const commentsRouter = require('./comments/comments.router');
 const feedRouter = require('./feed/feed.router');
+
+const API_PREFIX = '/api';
 
 const router = express.Router();
 
