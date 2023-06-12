@@ -20,7 +20,7 @@ This is a REST API for a portfolio publication site where users can sign up, cre
 	Run the following command to start a PostgreSQL container **OR** setup it manually:
 
 	```sh
-	docker run --name portfolio-pg --rm -e POSTGRES_USER=portfolio -e POSTGRES_PASSWORD=devpass -e PGDATA=/var/lib/postgresql/data/pgdata -v /tmp:/var/lib/postgresql/data -p 5432:5432 -it postgres:14.1-alpine
+	docker run --name portfolio-pg --rm -e POSTGRES_USER=portfolio -e POSTGRES_PASSWORD=examplepass -e PGDATA=/var/lib/postgresql/data/pgdata -v /tmp:/var/lib/postgresql/data -p 5432:5432 -it postgres:14.1-alpine
 	```
 
 4. Set Up Environment Variables
@@ -30,7 +30,7 @@ This is a REST API for a portfolio publication site where users can sign up, cre
 	```
 	APP_PORT=3000
 	DB_USER=portfolio
-	DB_PASS=devpass
+	DB_PASS=examplepass
 	DB_NAME=portfolio-db
 	DB_HOST=localhost
 	JWT_SECRET=jwtsecret
@@ -60,6 +60,215 @@ This is a REST API for a portfolio publication site where users can sign up, cre
 
 # Endpoints Documentation
 Authorization is done using JWT tokens. To access the protected routes, you need to provide the token in the `Authorization` header of the request with `Bearer` prefix.
+## Auth
+### Signup
+> POST /api/auth/signup
+
+**Description:** This route is used to sign up a new user.  
+**Is Auth required?:** No
+
+**Request data:**
+```
+body:
+{
+  "email": "test@mail.com",
+  "password": "examplepass",
+  "confirmPassword": "examplepass"
+}
+```
+
+**Response:**
+```json
+{
+	"id": 2,
+	"email": "test@mail.com",
+	"updatedAt": "2023-06-11T11:54:59.606Z",
+	"createdAt": "2023-06-11T11:54:59.606Z"
+}
+```
+
+### Login
+> POST /api/auth/login
+
+**Description:** This route is used to log in a user.  
+**Is Auth required?:** No
+
+**Request data:**
+```
+body:
+{
+  "email": "test@mail.com",
+  "password": "examplepass"
+}
+```
+
+**Response:**
+```json
+{
+	"id": 2,
+	"email": "test@mail.com",
+	"createdAt": "2023-06-11T11:54:59.606Z",
+	"updatedAt": "2023-06-11T11:54:59.606Z",
+	"token": "jwt_token"
+}
+```
+
+### Logout
+> POST /api/auth/logout
+
+**Description:** This route is used to log out the currently authenticated user.  
+**Is Auth required?:** Yes
+
+**Request data:** `None`
+
+**Response:**
+```json
+{
+	"message": "Logged out"
+}
+```
+
+## Profile
+### Delete profile
+> DELETE *host
+
+*/api/profile
+
+**Description:** This route is used to delete the user's profile.  
+**Is Auth required?:** Yes
+
+**Request data:** `None`
+
+```json
+{
+	"message": "Profile deleted"
+}
+```
+
+### Show profile
+> GET /api/profile
+
+**Description:** This route is used to retrieve the user's profile information.  
+**Is Auth required?:** Yes
+
+**Request data:** `None`
+
+**Response:**
+```json
+{
+	"id": 2,
+	"email": "test@mail.com",
+	"createdAt": "2023-06-11T11:54:59.606Z",
+	"updatedAt": "2023-06-11T11:54:59.606Z"
+}
+```
+
+## Portfolio
+### Get portfolios
+> GET /api/portfolio
+
+**Description:** This route is used to get all your portfolios.  
+**Is Auth required?:** Yes
+
+**Request data:** `None`
+
+**Response:**
+```json
+{
+	"data": [
+		{
+			"id": 1,
+			"name": "Portfolio 1",
+			"description": "my cool portfolio",
+			"createdAt": "2023-06-11T11:55:29.044Z",
+			"updatedAt": "2023-06-11T11:55:29.044Z",
+			"userId": 2
+		}
+	]
+}
+```
+
+### Get portfolio
+> GET /api/portfolio/:id
+
+**Description:** This route is used to get information about a specific portfolio.  
+**Is Auth required?:** Yes
+
+**Request data:**
+```
+params:
+- id
+```
+
+**Response:**
+```json
+{
+	"id": 1,
+	"name": "Portfolio 1",
+	"description": "my cool portfolio",
+	"createdAt": "2023-06-11T11:55:29.044Z",
+	"updatedAt": "2023-06-11T11:55:29.044Z",
+	"userId": 2,
+	"Images": [
+		{
+			"id": 2,
+			"name": "my image",
+			"description": "this is my image",
+			"filename": "4512359e-4a35-4e9b-bf45-9251ce7ea33c.jpeg",
+			"createdAt": "2023-06-11T21:33:44.138Z",
+			"updatedAt": "2023-06-11T21:33:44.138Z",
+			"url": "/images/4512359e-4a35-4e9b-bf45-9251ce7ea33c.jpeg"
+		}
+	]
+}
+```
+
+### Create portfolio
+> POST /api/portfolio
+
+**Description:** This route is used to create a new portfolio.  
+**Is Auth required?:** Yes
+
+**Request data:**
+```
+body:
+{
+  "name": "Portfolio 1",
+  "description": "my cool portfolio"
+}
+```
+
+**Response:**
+```json
+{
+	"id": 1,
+	"userId": 2,
+	"name": "Portfolio 1",
+	"description": "my cool portfolio",
+	"updatedAt": "2023-06-11T11:55:29.044Z",
+	"createdAt": "2023-06-11T11:55:29.044Z"
+}
+```
+
+### Delete portfolio
+> DELETE /api/portfolio/:id
+
+**Description:** This route is used to delete a specific portfolio.  
+**Is Auth required?:** Yes
+
+**Request data:**
+```
+params:
+- id
+```
+
+**Response:**
+```json
+{
+	"message": "Portfolio deleted"
+}
+```
+
 ## Images
 ### Create image
 > POST /api/images
@@ -229,214 +438,5 @@ params:
 ```json
 {
 	"message": "Comment deleted"
-}
-```
-
-## Portfolio
-### Get portfolios
-> GET /api/portfolio
-
-**Description:** This route is used to get all your portfolios.  
-**Is Auth required?:** Yes
-
-**Request data:** `None`
-
-**Response:**
-```json
-{
-	"data": [
-		{
-			"id": 1,
-			"name": "Portfolio 1",
-			"description": "my cool portfolio",
-			"createdAt": "2023-06-11T11:55:29.044Z",
-			"updatedAt": "2023-06-11T11:55:29.044Z",
-			"userId": 2
-		}
-	]
-}
-```
-
-### Get portfolio
-> GET /api/portfolio/:id
-
-**Description:** This route is used to get information about a specific portfolio.  
-**Is Auth required?:** Yes
-
-**Request data:**
-```
-params:
-- id
-```
-
-**Response:**
-```json
-{
-	"id": 1,
-	"name": "Portfolio 1",
-	"description": "my cool portfolio",
-	"createdAt": "2023-06-11T11:55:29.044Z",
-	"updatedAt": "2023-06-11T11:55:29.044Z",
-	"userId": 2,
-	"Images": [
-		{
-			"id": 2,
-			"name": "my image",
-			"description": "this is my image",
-			"filename": "4512359e-4a35-4e9b-bf45-9251ce7ea33c.jpeg",
-			"createdAt": "2023-06-11T21:33:44.138Z",
-			"updatedAt": "2023-06-11T21:33:44.138Z",
-			"url": "/images/4512359e-4a35-4e9b-bf45-9251ce7ea33c.jpeg"
-		}
-	]
-}
-```
-
-### Create portfolio
-> POST /api/portfolio
-
-**Description:** This route is used to create a new portfolio.  
-**Is Auth required?:** Yes
-
-**Request data:**
-```
-body:
-{
-  "name": "Portfolio 1",
-  "description": "my cool portfolio"
-}
-```
-
-**Response:**
-```json
-{
-	"id": 1,
-	"userId": 2,
-	"name": "Portfolio 1",
-	"description": "my cool portfolio",
-	"updatedAt": "2023-06-11T11:55:29.044Z",
-	"createdAt": "2023-06-11T11:55:29.044Z"
-}
-```
-
-### Delete portfolio
-> DELETE /api/portfolio/:id
-
-**Description:** This route is used to delete a specific portfolio.  
-**Is Auth required?:** Yes
-
-**Request data:**
-```
-params:
-- id
-```
-
-**Response:**
-```json
-{
-	"message": "Portfolio deleted"
-}
-```
-
-## Auth
-### Signup
-> POST /api/auth/signup
-
-**Description:** This route is used to sign up a new user.  
-**Is Auth required?:** No
-
-**Request data:**
-```
-body:
-{
-  "email": "test@mail.com",
-  "password": "devpass",
-  "confirmPassword": "devpass"
-}
-```
-
-**Response:**
-```json
-{
-	"id": 2,
-	"email": "test@mail.com",
-	"updatedAt": "2023-06-11T11:54:59.606Z",
-	"createdAt": "2023-06-11T11:54:59.606Z"
-}
-```
-
-### Login
-> POST /api/auth/login
-
-**Description:** This route is used to log in a user.  
-**Is Auth required?:** No
-
-**Request data:**
-```
-body:
-{
-  "email": "test@mail.com",
-  "password": "devpass"
-}
-```
-
-**Response:**
-```json
-{
-	"id": 2,
-	"email": "test@mail.com",
-	"createdAt": "2023-06-11T11:54:59.606Z",
-	"updatedAt": "2023-06-11T11:54:59.606Z",
-	"token": "jwt_token"
-}
-```
-
-### Logout
-> POST /api/auth/logout
-
-**Description:** This route is used to log out the currently authenticated user.  
-**Is Auth required?:** Yes
-
-**Request data:** `None`
-
-**Response:**
-```json
-{
-	"message": "Logged out"
-}
-```
-
-## Profile
-### Delete profile
-> DELETE *host
-
-*/api/profile
-
-**Description:** This route is used to delete the user's profile.  
-**Is Auth required?:** Yes
-
-**Request data:** `None`
-
-```json
-{
-	"message": "Profile deleted"
-}
-```
-
-### Show profile
-> GET /api/profile
-
-**Description:** This route is used to retrieve the user's profile information.  
-**Is Auth required?:** Yes
-
-**Request data:** `None`
-
-**Response:**
-```json
-{
-	"id": 2,
-	"email": "test@mail.com",
-	"createdAt": "2023-06-11T11:54:59.606Z",
-	"updatedAt": "2023-06-11T11:54:59.606Z"
 }
 ```
