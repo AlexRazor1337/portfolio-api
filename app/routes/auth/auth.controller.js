@@ -41,7 +41,7 @@ const login = async ({ email, password }) => {
     if (!isPasswordValid) throw new UnauthorizedException('Invalid credentials');
 
     delete user.password;
-    const token = jwt.sign(user, process.env.JWT_SECRET);
+    const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     return {
         ...user,
