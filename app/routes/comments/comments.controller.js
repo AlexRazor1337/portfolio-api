@@ -6,8 +6,12 @@ const createComment = ({ id: userId, imageId, text }) => {
         imageId,
         userId,
         text,
-    }).catch(() => {
-        throw new BadRequestException('Error creating comment');
+    }).catch((error) => {
+        if (error.name === 'SequelizeForeignKeyConstraintError') {
+            throw new NotFoundException('Image not found!');
+        }
+        
+        throw new BadRequestException('Error creating comment!');
     });
 };
 
@@ -19,7 +23,7 @@ const deleteComment = async ({ id: userId, commentId }) => {
         },
     });
 
-    if (!isDeleted) throw new NotFoundException('Comment not found');
+    if (!isDeleted) throw new NotFoundException('Comment not found!');
     return { message: 'Comment deleted' };
 };
 

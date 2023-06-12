@@ -43,7 +43,7 @@ const getPortfolio = async ({ id: userId, portfolioId }) => {
                 exclude: ['portfolioId'],
             },
         },
-    }).then(portfolio => portfolio.get());
+    }).then(portfolio => portfolio?.get());
 
     if (!portfolio) throw new NotFoundException('Portfolio not found');
 

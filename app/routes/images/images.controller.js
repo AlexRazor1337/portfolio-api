@@ -9,6 +9,11 @@ const User = require('@/models/user');
 const { BadRequestException, NotFoundException, InternalServerErrorException } = require('@/exceptions');
 
 const uploadImage = async ({ id: userId, portfolioId, name, description, file }) => {
+    // Check extension
+    if (!['image/png', 'image/jpeg'].includes(file.mimetype)) {
+        throw new BadRequestException('Invalid file type!');
+    }
+    
     const filename = `${crypto.randomUUID()}.${mime.extension(file.mimetype)}`;
     let image;
     try {
@@ -18,7 +23,11 @@ const uploadImage = async ({ id: userId, portfolioId, name, description, file })
             description,
             filename,
         });
-    } catch {
+    } catch (error) {
+        if (error.name === 'SequelizeForeignKeyConstraintError') {
+            throw new NotFoundException('Portfolio not found!');
+        }
+        
         throw new BadRequestException('Error uploading image!');
     }
 
