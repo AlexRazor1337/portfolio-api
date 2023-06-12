@@ -129,22 +129,6 @@ body:
 ```
 
 ## Profile
-### Delete profile
-> DELETE *host
-
-*/api/profile
-
-**Description:** This route is used to delete the user's profile.  
-**Is Auth required?:** Yes
-
-**Request data:** `None`
-
-```json
-{
-	"message": "Profile deleted"
-}
-```
-
 ### Show profile
 > GET /api/profile
 
@@ -160,6 +144,20 @@ body:
 	"email": "test@mail.com",
 	"createdAt": "2023-06-11T11:54:59.606Z",
 	"updatedAt": "2023-06-11T11:54:59.606Z"
+}
+```
+
+### Delete profile
+> DELETE /api/profile
+
+**Description:** This route is used to delete the user's profile.  
+**Is Auth required?:** Yes
+
+**Request data:** `None`
+
+```json
+{
+	"message": "Profile deleted"
 }
 ```
 
