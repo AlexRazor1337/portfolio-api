@@ -59,7 +59,7 @@ This is a REST API for a portfolio publication site where users can sign up, cre
 	The server will start running on the specified port and you can access the API endpoints.
 
 # Endpoints Documentation
-
+Authorization is done using JWT tokens. To access the protected routes, you need to provide the token in the `Authorization` header of the request with `Bearer` prefix.
 ## Images
 ### Create image
 > POST /api/images
@@ -143,14 +143,14 @@ params:
 ### Get feed
 > GET /api/feed
 
-**Description:** This route is used to get the feed of images.  
+**Description:** This route is used to get the feed of images. It contains all the images from all the portfolios, sorted by date. Supports pagination.  
 **Is Auth required?:** No
 
 **Request data:**
 ```
 Query:
-- offset: "10"
-- limit: "10"
+- offset
+- limit
 ```
 
 **Response:**
@@ -194,7 +194,7 @@ Query:
 
 **Request data:**
 ```
-Body:
+body:
 {
   "imageId": 1,
   "text": "nice image"
@@ -221,7 +221,8 @@ Body:
 
 **Request data:**
 ```
-:id
+params:
+- id
 ```
 
 **Response:**
@@ -238,14 +239,9 @@ Body:
 **Description:** This route is used to get all your portfolios.  
 **Is Auth required?:** Yes
 
-**Request data:**
-```
-None
-```
+**Request data:** `None`
 
-**
-
-Response:**
+**Response:**
 ```json
 {
 	"data": [
@@ -269,7 +265,8 @@ Response:**
 
 **Request data:**
 ```
-:id
+params:
+- id
 ```
 
 **Response:**
@@ -303,9 +300,7 @@ Response:**
 
 **Request data:**
 ```
-application/json
-
-Body:
+body:
 {
   "name": "Portfolio 1",
   "description": "my cool portfolio"
@@ -332,7 +327,8 @@ Body:
 
 **Request data:**
 ```
-:id
+params:
+- id
 ```
 
 **Response:**
@@ -351,9 +347,7 @@ Body:
 
 **Request data:**
 ```
-application/json
-
-Body:
+body:
 {
   "email": "test@mail.com",
   "password": "devpass",
@@ -379,9 +373,7 @@ Body:
 
 **Request data:**
 ```
-application/json
-
-Body:
+body:
 {
   "email": "test@mail.com",
   "password": "devpass"
@@ -423,12 +415,8 @@ Body:
 **Description:** This route is used to delete the user's profile.  
 **Is Auth required?:** Yes
 
-**Request data:**
-```
-None
-```
+**Request data:** `None`
 
-**Response:**
 ```json
 {
 	"message": "Profile deleted"
